@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Movie List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<h1>Movie List</h1>
+<br/><br/>
+<div id="myApp">
+    <ul v-if="movies != null">
+        <li v-for="movie in movies">{{movie.name}}</li>
+    </ul>
+    <span v-else>Loading...</span>
+</div>
+<script>
+	let app = new Vue({
+        el: '#myApp',
+        data: {
+          movies: null
+        },
+	    mounted: function() {
+			$.ajax({
+				url: "/api",
+				success: this.onSuccess.bind(this),
+				dataType: "json"
+		    });
+	    },
+	    methods: {
+	        onSuccess: function(data) {
+		        this.movies = data;
+		    }
+	    }
+    });
+</script>
+</body>
+</html>

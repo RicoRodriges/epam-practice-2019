@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Movie List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom-factories@1.0.2/index.js"></script>
+</head>
+<body>
+
+<div id="myApp"></div>
+<script>
+    class Component extends React.Component {
+
+        constructor(props) {
+            super(props);
+            this.state = { movies: null };
+        }
+
+        _onSuccess(data) {
+            this.setState({ movies: data });
+        }
+
+        render() {
+            if (this.state.movies == null) {
+                $.ajax({
+                  url: this.props.url,
+                  success: this._onSuccess.bind(this),
+                  dataType: "json"
+                });
+                return ReactDOMFactories.div(null,
+                    "Loading..."
+                );
+            } else {
+                var movieNames = this.state.movies
+                    .map((movie) => movie.name)
+					.map((movieName) => ReactDOMFactories.td(null, movieName))
+                    .map((tdElement) => ReactDOMFactories.tr(null, tdElement));
+                return ReactDOMFactories.table(null,
+                    ReactDOMFactories.tr(null, ReactDOMFactories.th(null, "Movie name")), // header
+                    movieNames                                                            // data
+                );
+            }
+        }
+    }
+
+	// optional declaration
+	Component.propTypes = {
+		url: PropTypes.string.isRequired
+	};
+
+    ReactDOM.render(
+        React.createElement(Component, {url:"/api"}),
+        document.getElementById("myApp")
+    );
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Movie List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+<div>
+    <table border="1" id="movies">
+    </table>
+</div>
+<script>
+    $.ajax({
+      url: "/api",
+      success: onSuccess,
+      dataType: "json"
+    });
+
+    function onSuccess(data) {
+        var table = $("#movies");
+        table.append($("<tr><th>Movie name</th></tr>"));
+        data.forEach(movie => table.append($(`<tr><td>${movie.name}</td></tr>`)));
+    }
+</script>
+</body>
+</html>
